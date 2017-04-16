@@ -2,8 +2,6 @@
 **/.DS_Store
 
 # Build Files
-**/node_modules
 /.sass-cache
-
-# Local Files
-/designs
+/node_modules
+/build

@@ -1,0 +1,16 @@
+{
+  "name": "angular-grunt-template",
+  "version": "1.0.0",
+  "dependencies": {
+    "angular": "^1.4.0",
+    "angular-cookies": "^1.4.0",
+    "angular-resource": "^1.4.0",
+    "angular-ui-router": "^0.4.2",
+    "angular-sanitize": "^1.4.0",
+    "angular-toastr": "^2.1.1",
+    "ngstorage": "^0.3.11",
+    "underscore": "^1.8.3"
+  },
+  "appPath": "app",
+  "moduleName": "angularGruntTemplate"
+}

@@ -7,9 +7,9 @@
 Include the following snippet in your VirtualHost configuration file:
 ```
 <VirtualHost *:80>
-    DocumentRoot "/path/to/project/argus-web-client"
-    ServerName toptal.dev
-    <Directory "/path/to/project/argus-web-client">
+    DocumentRoot "/path/to/project"
+    ServerName example.com
+    <Directory "/path/to/project">
         Options +FollowSymLinks
         Header set Access-Control-Allow-Origin "*"
         AllowOverride All
@@ -18,7 +18,7 @@ Include the following snippet in your VirtualHost configuration file:
 </VirtualHost>
 ```
 
-Include the following line in your apache `hosts` file: `127.0.0.1 argus.dev`
+Include the following line in your apache `hosts` file: `127.0.0.1 example.com`
 
 ### Option 2) Use MAMP Application
 

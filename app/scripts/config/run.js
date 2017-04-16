@@ -1,5 +1,8 @@
 (function() {
-    angular.module('app').run(['$rootScope', '$state', 'config', function($rootScope, $state, config) {
+    'use strict';
+
+    angular.module('app').run(['$rootScope', '$state', 'config',
+    function($rootScope, $state, config) {
         $rootScope.app = {
             title: config.site
         };
