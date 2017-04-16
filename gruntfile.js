@@ -109,19 +109,32 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         mangle: false,
-        compress: {
-          drop_console: true,
-          keep_fargs: true,
-          hoist_funs: false,
-          hoist_vars: false
-        }
+        compress: false,
+        beautify: true,
+        expand: true,
+      },
+
+      dev: {
+        files: [{
+          expand: true,
+          cwd: '<%= paths.app %>/scripts',
+          src: '**/*.js',
+          dest: '<%= paths.buildDirs.scripts %>'
+        }]
       },
 
       dist: {
+        options: {
+          compress: {
+            drop_console: true,
+            keep_fargs: true,
+            hoist_funs: false,
+            hoist_vars: false
+          }
+        },
+
         files: {
-          '<%= paths.buildFiles.scripts %>' : [
-            '<%= paths.scripts %>'
-          ]
+          '<%= paths.buildFiles.scripts %>' : [ '<%= paths.scripts %>' ]
         }
       }
     },
@@ -149,9 +162,14 @@ module.exports = function(grunt) {
         shorthandCompacting: false,
         roundingPrecision: -1
       },
-      files: [
-        '<%= paths.buildFiles.styles %>'
-      ]
+      target: {
+        files: [{
+          expand: true,
+          cwd: '<%= paths.buildDirs.styles %>',
+          src: ['*.css', '!*.min.css'],
+          dest: '<%= paths.buildDirs.styles %>'
+        }]
+      }
     },
 
     /* Wire Dependencies
@@ -164,28 +182,28 @@ module.exports = function(grunt) {
         linkTemplate: '<link rel="stylesheet" type="text/css" href="{{ path }}">'
       },
 
-      css: {
+      styles: {
         options: {
-          openTag: '<!-- css files -->',
-          closeTag: '<!-- /css files -->'
+          openTag: '<!-- styles files -->',
+          closeTag: '<!-- /styles files -->'
         },
-        src: ['<%= paths.buildFiles.styles %>'],
+        src: ['<%= paths.buildDirs.styles %>/**/*.css'],
         dest: '<%= paths.buildFiles.index %>'
       },
 
-      app: {
+      scripts: {
         options: {
-          openTag: '<!-- app files -->',
-          closeTag: '<!-- /app files -->'
+          openTag: '<!-- scripts files -->',
+          closeTag: '<!-- /scripts files -->'
         },
-        src: ['<%= paths.buildFiles.scripts %>'],
+        src: ['<%= paths.buildDirs.scripts %>/**/*.js'],
         dest: '<%= paths.buildFiles.index %>'
       },
 
       vendors: {
         options: {
-          openTag: '<!-- vendor files -->',
-          closeTag: '<!-- /vendor files -->'
+          openTag: '<!-- vendors files -->',
+          closeTag: '<!-- /vendors files -->'
         },
         src: [
           '<%= paths.vendors %>/angular/angular.js',
@@ -201,41 +219,38 @@ module.exports = function(grunt) {
       }
     },
 
-    // watch: {
-    //   options: { livereload: true },
+    watch: {
+      options: { livereload: true },
 
-    //   index: {
-    //     files: ['<%= paths.index %>'],
-    //     tasks: []
-    //   },
+      index: {
+        files: ['<%= paths.index %>'],
+        tasks: []
+      },
 
-    //   styles: {
-    //     files: ['<%= paths.allSass %>'],
-    //     tasks: ['cssStack']
-    //   },
+      styles: {
+        files: ['<%= paths.buildDirs.styles %>'],
+        tasks: ['_styles', 'tags:styles']
+      },
 
-    //   app: {
-    //     files: ['<%= paths.allApp %>'],
-    //     tasks: ['jsStack']
-    //   },
+      scripts: {
+        files: ['<%= paths.buildDirs.scripts %>'],
+        tasks: ['uglify:dev', 'tags:scripts']
+      },
 
-    //   templates: {
-    //     files: ['<%= paths.templates %>'],
-    //     tasks: ['templates']
-    //   }
-    // }
+      views: {
+        files: ['<%= paths.views %>'],
+        tasks: ['ngtemplates']
+      }
+    }
   });
 
-  // grunt.registerTask('vendors', ['tags:vendors']);
-  // grunt.registerTask('templates', ['ngtemplates']);
+  grunt.registerTask('_start', ['clean', 'copy']);
+  grunt.registerTask('_end', ['ngtemplates', 'tags']);
 
-  // grunt.registerTask('cssStack', ['clean:css', 'sass', 'postcss', 'cssmin', 'tags:css']);
-  // grunt.registerTask('jsStack', ['clean:js', 'uglify:dev', 'tags:app']);
+  grunt.registerTask('_styles', ['sass', 'postcss']);
 
-  // grunt.registerTask('build', [ 'vendors', 'templates', 'cssStack', 'jsStack']);
+  grunt.registerTask('dev', ['_start', 'uglify:dev', '_styles', '_end']);
+  grunt.registerTask('build', ['_start', 'uglify:dist', '_styles', 'cssmin', '_end']);
 
-  // grunt.registerTask('default', ['build', 'watch']);
-
-  grunt.registerTask('default', ['clean', 'copy', 'uglify', 'sass', 'ngtemplates', 'postcss', 'cssmin', 'tags']);
-
+  grunt.registerTask('default', ['dev', 'watch']);
 }

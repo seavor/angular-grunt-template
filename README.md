@@ -7,9 +7,9 @@
 Include the following snippet in your VirtualHost configuration file:
 ```
 <VirtualHost *:80>
-    DocumentRoot "/path/to/project"
+    DocumentRoot "/path/to/project/build"
     ServerName example.com
-    <Directory "/path/to/project">
+    <Directory "/path/to/project/build">
         Options +FollowSymLinks
         Header set Access-Control-Allow-Origin "*"
         AllowOverride All
